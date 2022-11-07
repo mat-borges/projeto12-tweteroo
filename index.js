@@ -15,14 +15,16 @@ app.post('/sign-up', (req, res) => {
 		return;
 	}
 
-	if (
-		!users.find((e) => {
-			if (e.username === username && e.avatar === avatar) {
-				res.status(409).send('Esse usuário já existe');
-				return;
-			}
-		})
-	) {
+	const findUser = users.find((e) => {
+		if (e.username === username && e.avatar === avatar) {
+			res.status(409).send('Esse usuário já existe');
+			return;
+		} else {
+			return;
+		}
+	});
+
+	if (!findUser) {
 		users.push(req.body);
 	}
 
@@ -31,32 +33,21 @@ app.post('/sign-up', (req, res) => {
 
 app.get('/tweets', (req, res) => {
 	const page = parseInt(req.query.page);
-	let newTweets = [];
-	let firstIndex = 10 * (page - 1);
+	const newTweets = [];
 
-	if (!isNaN(page)) {
-		if (tweets.length !== 0) {
-			for (let maxLength = 0; maxLength < 10; maxLength++) {
-				if (tweets[firstIndex] !== undefined) {
-					newTweets.push(tweets[firstIndex]);
-					console.log('-------------', newTweets);
-					firstIndex++;
-				} else {
-					firstIndex++;
-				}
-			}
-		}
-	} else {
-		console.log('else');
-		const i = tweets.length;
-		if (tweets.length !== 0) {
-			while (newTweets.length < 10 && tweets[i - 1] !== undefined) {
-				newTweets.push(tweets[i - 1]);
-				i--;
+	let firstIndex = !isNaN(page) ? 10 * (page - 1) : 10;
+
+	if (tweets.length !== 0) {
+		for (let maxLength = 0; maxLength < 10; maxLength++) {
+			if (tweets[firstIndex] !== undefined) {
+				newTweets.push(tweets[firstIndex]);
+				firstIndex++;
+			} else {
+				firstIndex++;
 			}
 		}
 	}
-	console.log(newTweets);
+
 	res.send(newTweets);
 });
 
@@ -77,7 +68,6 @@ app.post('/tweets', (req, res) => {
 
 	const avatar = users.filter((e) => e.username === username);
 	tweets.push({ username, avatar: avatar[0].avatar, tweet });
-	console.log(tweets);
 	res.sendStatus(201);
 });
 
