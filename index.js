@@ -41,6 +41,12 @@ app.get('/tweets', (req, res) => {
 	res.send(newTweets);
 });
 
+app.get('/tweets/:USERNAME', (req, res) => {
+	const newTweets = tweets.filter((e) => e.username === req.params.USERNAME);
+
+	res.send(newTweets);
+});
+
 app.post('/tweets', (req, res) => {
 	const { username, tweet } = req.body;
 
@@ -52,7 +58,6 @@ app.post('/tweets', (req, res) => {
 	const avatar = users.filter((e) => e.username === username);
 
 	tweets.push({ username, avatar: avatar[0].avatar, tweet });
-	console.log(tweets);
 
 	res.sendStatus(201);
 });
