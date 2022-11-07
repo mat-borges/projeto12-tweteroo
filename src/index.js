@@ -36,7 +36,6 @@ app.get('/tweets', (req, res) => {
 	const newTweets = [];
 
 	let firstIndex = !isNaN(page) ? 10 * (page - 1) : 0;
-	console.log(firstIndex);
 
 	if (tweets.length !== 0) {
 		for (let maxLength = 0; maxLength < 10; maxLength++) {
